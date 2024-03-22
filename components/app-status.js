@@ -3,7 +3,7 @@ import { todoStore } from '../store/todoStore.js';
 export class AppStatus extends HTMLElement {
   constructor() {
     super();
-    todoStore.events.subscribe('stateChange', this.render.bind(this));
+    todoStore.subscribe(this.render.bind(this));
   }
 
   render() {
@@ -11,7 +11,7 @@ export class AppStatus extends HTMLElement {
         <aside class="app__status">
             <div>
                 <small>오늘 할 일이</small>
-                <span>${todoStore.state.items.length}</span>
+                <span>${todoStore.getState().items.length}</span>
                 <small>개 남았어요. 😢</small>
             </div>
         </aside>

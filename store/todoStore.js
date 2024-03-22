@@ -1,27 +1,10 @@
-import { Store } from '../state/store.js';
+import { createStore } from '../state/vanillaStore.js';
 
-const actions = {
-  ADD_ITEM(context, item) {
-    context.commit('addItem', item);
-  },
-  DELETE_ITEM(context, index) {
-    context.commit('deleteItem', index);
-  },
-};
-
-const mutations = {
-  addItem(state, item) {
-    state.items.push(item);
-    return state;
-  },
-  deleteItem(state, index) {
-    state.items.splice(index, 1);
-    return state;
-  },
-};
-
-const state = {
+export const todoStore = createStore((set) => ({
   items: [],
-};
-
-export const todoStore = new Store(state, actions, mutations);
+  addItem: (item) => set((prev) => ({ items: [...prev.items, item] })),
+  deleteItem: (idx) =>
+    set((prev) => ({
+      items: [...prev.items.slice(0, idx), ...prev.items.slice(idx + 1)],
+    })),
+}));

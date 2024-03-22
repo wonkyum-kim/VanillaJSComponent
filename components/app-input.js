@@ -3,8 +3,7 @@ import { todoStore } from '../store/todoStore.js';
 export class AppInput extends HTMLElement {
   constructor() {
     super();
-    // todoStore에 변경사항이 생기면, stateChange를 구독했기 때문에 콜백 함수가 실행된다.
-    todoStore.events.subscribe('stateChange', this.renderList.bind(this));
+    todoStore.subscribe(this.renderList.bind(this));
   }
 
   render() {
@@ -29,7 +28,7 @@ export class AppInput extends HTMLElement {
   }
 
   renderList() {
-    const list = todoStore.state.items.reduce((acc, item) => {
+    const list = todoStore.getState().items.reduce((acc, item) => {
       return acc + `<li>${item}<button class="rm">×</button></li>`;
     }, '');
 
@@ -43,7 +42,7 @@ export class AppInput extends HTMLElement {
   }
 
   onDelete = (idx) => {
-    todoStore.dispatch('DELETE_ITEM', idx);
+    todoStore.getState().deleteItem(idx);
   };
 
   onSubmit = (event) => {
@@ -51,9 +50,9 @@ export class AppInput extends HTMLElement {
 
     const inputElement = document.getElementById('new-item-field');
     const item = inputElement.value.trim();
-    todoStore.dispatch('ADD_ITEM', item);
     inputElement.value = '';
-    this.renderList();
+
+    todoStore.getState().addItem(item);
   };
 
   connectedCallback() {
@@ -62,5 +61,10 @@ export class AppInput extends HTMLElement {
       this.querySelector('form').addEventListener('submit', this.onSubmit);
       this.rendered = true;
     }
+  }
+
+  disconnectedCallback() {
+    this.querySelector('form').removeEventListener('submit', this.onSubmit);
+    this.rendered = false;
   }
 }
