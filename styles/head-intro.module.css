@@ -1,0 +1,13 @@
+.intro {
+  --border: #888888;
+  border-bottom: 1px dotted var(--border);
+}
+
+.intro__heading {
+  font-weight: 400;
+}
+
+.intro__summary {
+  font-size: 1.3rem;
+  font-weight: 300;
+}
